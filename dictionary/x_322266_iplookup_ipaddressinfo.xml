@@ -2,5 +2,6 @@
     <element label="IPAddressInfo" max_length="40" name="x_322266_iplookup_ipaddressinfo" type="collection">
         <element label="City" max_length="40" name="city" type="string"/>
         <element label="IP address" max_length="40" name="ip_address" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Organisation" max_length="40" name="u_org" type="string"/>
     </element>
 </database>

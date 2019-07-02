@@ -32,7 +32,7 @@
 	// Add your code here
 	try { 
 		var r = new sn_ws.RESTMessageV2('x_322266_iplookup.IPInfo', 'GetIPInfo');
-		r.setStringParameterNoEscape('specific_field', 'geo');
+		r.setStringParameterNoEscape('specific_field', 'json');
 		r.setStringParameterNoEscape('ipaddress', current.ip_address);
 
 		//override authentication profile 
@@ -49,29 +49,29 @@
 
 		var response = r.execute();
 		var responseBody = response.getBody();
+		var httpStatus = response.getStatusCode();
 
 		// Convert the json formated string to a JavaScript object
 		var responseObj = JSON.parse(responseBody);
 		// Prevent the Business Rule from running after it changes the record
 		current.setWorkflow(false);
+		// Set the value of the organization field on the IPAddressInfo record
+		current.u_org = responseObj.org;
 		// Set the value of the City field on the IPAddressInfo record
-		current.city = responseObj.city;
-		gs.info("IPLookup: City = " + current.city);
-		current.update();
-
-		/* var ip_city = '';
-		ip_city = responseObj.city;
-		gs.info("IPLookup: length of city = " + ip_city.length);
-		if (ip_city.lenght > 0)
+		var city_tmp = '';
+		var n = 0;
+		city_tmp = responseObj.city;
+		n = city_tmp.length;
+		gs.info("IPLookup: length of city = " + n);
+		if (n > 0)
 		{
-			current.city = ip_city;
-			gs.info("IPLookup: City = " + current.city);
-			current.update();
+			current.city = city_tmp;
+			gs.info("IPLookup: HTTP-Status = " + httpStatus + ", City = " + current.city);
 		} else {
-			gs.info("IPLookup: No city found for IP Address City " + current.ip_address);
-		} */
-
-		// var httpStatus = response.getStatusCode();
+			current.city = 'unkonwn';
+			gs.info("IPLookup: HTTP-Status = " + httpStatus + ", No city found for IP Address " + current.ip_address);
+		}
+		current.update();
 	}
 	catch(err) {
 		// var message = ex.message;
@@ -84,7 +84,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>b72c5efadbd2330048861461399619ee</sys_id>
-        <sys_mod_count>13</sys_mod_count>
+        <sys_mod_count>22</sys_mod_count>
         <sys_name>Populate IP Address City</sys_name>
         <sys_overrides/>
         <sys_package display_value="IPLookup" source="x_322266_iplookup">5eb2deb2dbd23300488614613996194a</sys_package>
@@ -92,7 +92,7 @@
         <sys_scope display_value="IPLookup">5eb2deb2dbd23300488614613996194a</sys_scope>
         <sys_update_name>sys_script_b72c5efadbd2330048861461399619ee</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2019-07-01 19:13:16</sys_updated_on>
+        <sys_updated_on>2019-07-02 06:46:22</sys_updated_on>
         <template/>
         <when>async</when>
     </sys_script>
